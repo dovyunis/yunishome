@@ -1,2 +1,1 @@
-{"ok":true,"username":"dov"}OK
-DONE
+OKDB uploaded

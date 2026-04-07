@@ -199,6 +199,16 @@ export async function initDatabase() {
   db = saved ? new SQL.Database(saved) : new SQL.Database();
   initSchema();
 
+  // If local DB exists but is empty (no months), try server
+  const monthCount = db.exec("SELECT COUNT(*) FROM months")[0]?.values[0][0] || 0;
+  if (monthCount === 0) {
+    const serverData = await loadSharedDb();
+    if (serverData && serverData.byteLength > 0) {
+      db = new SQL.Database(serverData);
+      initSchema();
+    }
+  }
+
   // Fix: round all half values to integers (may have decimals from Excel import)
   db.run("UPDATE dov_expenses SET half = ROUND(half) WHERE half != ROUND(half)");
   db.run("UPDATE talia_expenses SET half = ROUND(half) WHERE half != ROUND(half)");

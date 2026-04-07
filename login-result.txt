@@ -1,3 +1,2 @@
-
-HTTP:200
-SIZE:36864
+{"ok":true,"username":"dov"}OK
+DONE

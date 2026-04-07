@@ -101,6 +101,32 @@
 
 @media (max-width: 768px) {
   .summary-cards {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .summary-card {
+    padding: 14px 12px;
+    border-radius: 10px;
+  }
+  .card-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+    border-radius: 8px;
+  }
+  .card-value {
+    font-size: 18px;
+    margin-bottom: 2px;
+  }
+  .card-label {
+    font-size: 10px;
+  }
+  .card-breakdown {
+    font-size: 9px;
+  }
+  .card-trend {
+    font-size: 10px;
+    padding: 2px 6px;
   }
 }

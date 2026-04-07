@@ -46,5 +46,18 @@
 @media (max-width: 768px) {
   .charts-grid {
     grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .chart-card {
+    padding: 14px;
+    border-radius: 10px;
+  }
+  .chart-card h3 {
+    font-size: 13px;
+    margin-bottom: 10px;
+  }
+  .chart-canvas-wrapper {
+    min-height: 200px;
   }
 }

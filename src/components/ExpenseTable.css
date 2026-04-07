@@ -177,14 +177,50 @@
 }
 
 @media (max-width: 768px) {
+  .table-section {
+    border-radius: 10px;
+    margin-bottom: 16px;
+  }
   .table-toolbar {
     flex-direction: column;
     align-items: stretch;
+    padding: 10px 12px;
+    gap: 8px;
   }
   .search-input {
     width: 100%;
   }
   .table-actions {
-    justify-content: flex-end;
+    justify-content: space-between;
+  }
+  .expense-table th {
+    padding: 8px 8px;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+  .expense-table td {
+    padding: 8px 8px;
+    font-size: 12px;
+  }
+  .editable-cell {
+    min-width: 36px;
+    padding: 2px 4px;
+    font-size: 12px;
+  }
+  .editable-input {
+    font-size: 12px;
+    padding: 4px 6px;
+    max-width: 120px;
+  }
+  .table-sum-row td {
+    padding: 8px 8px;
+    font-size: 12px;
+  }
+  .sum-label {
+    font-size: 11px;
+  }
+  .btn-icon {
+    padding: 6px 10px;
+    font-size: 12px;
   }
 }

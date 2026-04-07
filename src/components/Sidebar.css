@@ -181,6 +181,9 @@
   .sidebar.open {
     transform: translateX(0);
   }
+  .sidebar-month-item .month-delete-btn {
+    opacity: 0.6;
+  }
 }
 
 /* Add Month Modal */

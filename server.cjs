@@ -10,7 +10,7 @@ const DB_FILE = path.join(__dirname, 'shared-db.bin');
 // ============================================================
 //  Authentication config (use env vars or defaults)
 // ============================================================
-const USERS = JSON.parse(process.env.USERS_JSON || '{"dov":"yunis2026","talia":"yunis2026"}');
+const USERS = JSON.parse(process.env.USERS_JSON || '{"dov":"yunis2026","home":"yunis2026"}');
 const SESSION_EXPIRY = 7 * 24 * 60 * 60 * 1000; // 7 days
 
 // In-memory session store

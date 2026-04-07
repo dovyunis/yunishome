@@ -328,7 +328,6 @@ export default function App() {
               </div>
               <div className="top-actions">
                 <button className="action-btn primary" onClick={handleSync}>🔄 סנכרון</button>
-                <button className="action-btn" onClick={handleExport}>📥 ייצוא אקסל</button>
                 {currentUser && (
                   <button className="action-btn logout-btn" onClick={handleLogout} title="התנתק">
                     👤 {currentUser} | יציאה

@@ -128,6 +128,36 @@
   gap: 8px;
 }
 
+/* Swipe container & slide animations */
+.swipe-container {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  will-change: transform, opacity;
+}
+
+.swipe-container.slide-out-left {
+  transform: translateX(-40px);
+  opacity: 0.3;
+}
+.swipe-container.slide-out-right {
+  transform: translateX(40px);
+  opacity: 0.3;
+}
+.swipe-container.slide-in-right {
+  animation: slideInRight 0.3s ease forwards;
+}
+.swipe-container.slide-in-left {
+  animation: slideInLeft 0.3s ease forwards;
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(60px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes slideInLeft {
+  from { transform: translateX(-60px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
 /* Section titles */
 .section-title {
   font-size: 16px;

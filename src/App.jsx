@@ -35,6 +35,9 @@ export default function App() {
   const fileInputRef = useRef(null);
   const touchStartX = useRef(null);
   const touchStartY = useRef(null);
+  const touchMoveDx = useRef(0);
+  const [swipeOffset, setSwipeOffset] = useState(0);
+  const [slideClass, setSlideClass] = useState('');
 
   const toast = useCallback((message, type = 'info') => {
     const id = Date.now();
@@ -100,28 +103,56 @@ export default function App() {
 
   /* Swipe between months on mobile */
   const navigateMonth = useCallback((direction) => {
-    if (!activeMonth || months.length <= 1) return;
+    if (!activeMonth || months.length <= 1) return false;
     const idx = months.findIndex(m => m.name === activeMonth);
-    // RTL: swipe left = next month (higher index), swipe right = previous month
     const newIdx = direction === 'left' ? idx + 1 : idx - 1;
     if (newIdx >= 0 && newIdx < months.length) {
-      loadMonth(months[newIdx].name);
+      // Slide animation
+      setSlideClass(direction === 'left' ? 'slide-out-left' : 'slide-out-right');
+      setTimeout(() => {
+        loadMonth(months[newIdx].name);
+        setSlideClass(direction === 'left' ? 'slide-in-right' : 'slide-in-left');
+        setTimeout(() => setSlideClass(''), 300);
+      }, 150);
+      return true;
     }
+    return false;
   }, [activeMonth, months, loadMonth]);
 
   const handleTouchStart = useCallback((e) => {
+    // Don't capture swipes on scrollable tables
+    if (e.target.closest('.expense-table-wrapper')) return;
     touchStartX.current = e.touches[0].clientX;
     touchStartY.current = e.touches[0].clientY;
+    touchMoveDx.current = 0;
   }, []);
 
-  const handleTouchEnd = useCallback((e) => {
+  const handleTouchMove = useCallback((e) => {
     if (touchStartX.current === null) return;
-    const dx = e.changedTouches[0].clientX - touchStartX.current;
-    const dy = e.changedTouches[0].clientY - touchStartY.current;
+    const dx = e.touches[0].clientX - touchStartX.current;
+    const dy = e.touches[0].clientY - touchStartY.current;
+    // If scrolling vertically, cancel swipe
+    if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 10) {
+      touchStartX.current = null;
+      setSwipeOffset(0);
+      return;
+    }
+    touchMoveDx.current = dx;
+    // Live drag feedback (capped at ±120px)
+    if (Math.abs(dx) > 20) {
+      setSwipeOffset(Math.max(-120, Math.min(120, dx * 0.5)));
+    }
+  }, []);
+
+  const handleTouchEnd = useCallback(() => {
+    setSwipeOffset(0);
+    if (touchStartX.current === null) return;
+    const dx = touchMoveDx.current;
     touchStartX.current = null;
     touchStartY.current = null;
-    // Only swipe if horizontal distance > 60px and more horizontal than vertical
-    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+    touchMoveDx.current = 0;
+    // Swipe threshold: 80px
+    if (Math.abs(dx) > 80) {
       navigateMonth(dx < 0 ? 'left' : 'right');
     }
   }, [navigateMonth]);
@@ -294,6 +325,7 @@ export default function App() {
         className="main-content"
         style={!showDashboard ? { marginRight: 0 } : undefined}
         onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
         {!showDashboard ? (
@@ -306,7 +338,10 @@ export default function App() {
             </div>
           </>
         ) : (
-          <>
+          <div
+            className={`swipe-container ${slideClass}`}
+            style={swipeOffset ? { transform: `translateX(${swipeOffset}px)`, transition: 'none' } : undefined}
+          >
             {/* Top bar */}
             <div className="top-bar">
               <div className="month-nav-header">
@@ -457,7 +492,7 @@ export default function App() {
                 });
               }}
             />
-          </>
+          </div>
         )}
       </main>
 

@@ -3,17 +3,14 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const DIST = path.join(__dirname, 'dist');
 const DB_FILE = path.join(__dirname, 'shared-db.bin');
 
 // ============================================================
-//  Authentication config — CHANGE THESE!
+//  Authentication config (use env vars or defaults)
 // ============================================================
-const USERS = {
-  'dov': 'yunis2026',
-  'talia': 'yunis2026',
-};
+const USERS = JSON.parse(process.env.USERS_JSON || '{"dov":"yunis2026","talia":"yunis2026"}');
 const SESSION_EXPIRY = 7 * 24 * 60 * 60 * 1000; // 7 days
 
 // In-memory session store

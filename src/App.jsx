@@ -277,30 +277,12 @@ export default function App() {
               <h1>📊 {activeMonth}</h1>
               <div className="top-actions">
                 <button className="action-btn primary" onClick={handleSync}>🔄 סנכרון</button>
-                <button className="action-btn" onClick={() => fileInputRef.current?.click()}>
-                  📤 ייבוא אקסל
-                </button>
                 <button className="action-btn" onClick={handleExport}>📥 ייצוא אקסל</button>
-                <button className="action-btn danger" onClick={handleReset}>🗑️ איפוס</button>
                 {currentUser && (
                   <button className="action-btn logout-btn" onClick={handleLogout} title="התנתק">
                     👤 {currentUser} | יציאה
                   </button>
                 )}
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept=".xlsx,.xls"
-                  hidden
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (!file) return;
-                    const reader = new FileReader();
-                    reader.onload = (ev) => handleFile(ev.target.result);
-                    reader.readAsBinaryString(file);
-                    e.target.value = '';
-                  }}
-                />
               </div>
             </div>
 

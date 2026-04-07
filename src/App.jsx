@@ -33,6 +33,8 @@ export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const fileInputRef = useRef(null);
+  const touchStartX = useRef(null);
+  const touchStartY = useRef(null);
 
   const toast = useCallback((message, type = 'info') => {
     const id = Date.now();
@@ -95,6 +97,34 @@ export default function App() {
       setPrevData(null);
     }
   }, [months]);
+
+  /* Swipe between months on mobile */
+  const navigateMonth = useCallback((direction) => {
+    if (!activeMonth || months.length <= 1) return;
+    const idx = months.findIndex(m => m.name === activeMonth);
+    // RTL: swipe left = next month (higher index), swipe right = previous month
+    const newIdx = direction === 'left' ? idx + 1 : idx - 1;
+    if (newIdx >= 0 && newIdx < months.length) {
+      loadMonth(months[newIdx].name);
+    }
+  }, [activeMonth, months, loadMonth]);
+
+  const handleTouchStart = useCallback((e) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+  }, []);
+
+  const handleTouchEnd = useCallback((e) => {
+    if (touchStartX.current === null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    const dy = e.changedTouches[0].clientY - touchStartY.current;
+    touchStartX.current = null;
+    touchStartY.current = null;
+    // Only swipe if horizontal distance > 60px and more horizontal than vertical
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      navigateMonth(dx < 0 ? 'left' : 'right');
+    }
+  }, [navigateMonth]);
 
   /* File upload */
   const handleFile = useCallback(async (fileData) => {
@@ -260,7 +290,12 @@ export default function App() {
         />
       )}
 
-      <main className="main-content" style={!showDashboard ? { marginRight: 0 } : undefined}>
+      <main
+        className="main-content"
+        style={!showDashboard ? { marginRight: 0 } : undefined}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
         {!showDashboard ? (
           <>
             <UploadArea onFile={handleFile} />
@@ -274,7 +309,23 @@ export default function App() {
           <>
             {/* Top bar */}
             <div className="top-bar">
-              <h1>📊 {activeMonth}</h1>
+              <div className="month-nav-header">
+                <button
+                  className="month-nav-arrow"
+                  onClick={() => navigateMonth('right')}
+                  disabled={months.findIndex(m => m.name === activeMonth) <= 0}
+                >
+                  ◀
+                </button>
+                <h1>📊 {activeMonth}</h1>
+                <button
+                  className="month-nav-arrow"
+                  onClick={() => navigateMonth('left')}
+                  disabled={months.findIndex(m => m.name === activeMonth) >= months.length - 1}
+                >
+                  ▶
+                </button>
+              </div>
               <div className="top-actions">
                 <button className="action-btn primary" onClick={handleSync}>🔄 סנכרון</button>
                 <button className="action-btn" onClick={handleExport}>📥 ייצוא אקסל</button>

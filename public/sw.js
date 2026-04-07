@@ -1,4 +1,4 @@
-const CACHE_NAME = 'yunishome-v3';
+const CACHE_NAME = 'yunishome-v4';
 
 // Install — cache the app shell
 self.addEventListener('install', (event) => {
@@ -27,9 +27,8 @@ self.addEventListener('activate', (event) => {
 
 // Fetch — network first, fallback to cache. Never cache API calls.
 self.addEventListener('fetch', (event) => {
-  // Never cache API calls
+  // Never cache API calls — pass through directly (don't intercept)
   if (event.request.url.includes('/api/')) {
-    event.respondWith(fetch(event.request));
     return;
   }
 

@@ -73,14 +73,15 @@ async function loadDb() {
 // Try to fetch the shared DB from the server (synced from desktop)
 async function loadSharedDb() {
   try {
-    const res = await fetch('/api/sync-db', { cache: 'no-store' });
+    const res = await fetch('/api/sync-db', { cache: 'no-store', credentials: 'same-origin' });
     if (res.status === 401) { window.location.href = '/login'; return null; }
     if (res.ok) {
       const buf = await res.arrayBuffer();
       if (buf.byteLength > 0) return new Uint8Array(buf);
     }
+    console.warn('[loadSharedDb] status:', res.status, 'size:', 0);
   } catch (e) {
-    // ignore
+    console.error('[loadSharedDb] error:', e);
   }
   return null;
 }

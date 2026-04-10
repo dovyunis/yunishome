@@ -383,11 +383,6 @@ export default function App() {
               taliaHalfSum={(data.taliaExpenses || []).reduce((s, r) => s + (r.half || 0), 0)}
             />
 
-            {/* Charts */}
-            <div className="charts-grid">
-              <MonthlyComparisonChart allMonths={allMonths} />
-            </div>
-
             {/* Tables */}
             <ExpenseTable
               title="הוצאות משתנות"
@@ -491,6 +486,11 @@ export default function App() {
                 });
               }}
             />
+
+            {/* Charts */}
+            <div className="charts-grid">
+              <MonthlyComparisonChart allMonths={allMonths} />
+            </div>
           </div>
         )}
       </main>

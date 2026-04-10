@@ -5,7 +5,7 @@ import Sidebar from './components/Sidebar';
 import UploadArea from './components/UploadArea';
 import SummaryCards from './components/SummaryCards';
 import ExpenseTable from './components/ExpenseTable';
-import { FixedExpensesChart, MonthlyComparisonChart } from './components/Charts';
+import { MonthlyComparisonChart } from './components/Charts';
 import Toast from './components/Toast';
 import './App.css';
 
@@ -385,57 +385,13 @@ export default function App() {
 
             {/* Charts */}
             <div className="charts-grid">
-              <FixedExpensesChart data={data.fixedExpenses} />
               <MonthlyComparisonChart allMonths={allMonths} />
             </div>
 
             {/* Tables */}
             <ExpenseTable
-              title="הכנסות"
-              icon="💰"
-              columns={[
-                { key: 'name', label: 'מקור', type: 'text' },
-                { key: 'amount', label: 'סכום', type: 'number' },
-              ]}
-              rows={data.income}
-              tableName="income"
-              monthId={data.monthId}
-              onCellSave={handleCellSave}
-              onAddRow={handleAddRow}
-              onDeleteRows={(ids) => {
-                ids.forEach((id) => deleteRow('income', id));
-                if (data.monthId) recalcMonthTotals(data.monthId);
-                saveDb().then(() => {
-                  loadMonth(activeMonth);
-                  setAllMonths(getAllMonthsSummary());
-                  toast(`${ids.length} שורות נמחקו`, 'success');
-                });
-              }}
-            />
-
-            <ExpenseTable
-              title="הוצאות קבועות"
-              icon="🏠"
-              columns={FIXED_COLS}
-              rows={data.fixedExpenses}
-              tableName="fixed_expenses"
-              monthId={data.monthId}
-              onCellSave={handleCellSave}
-              onAddRow={handleAddRow}
-              onDeleteRows={(ids) => {
-                ids.forEach((id) => deleteRow('fixed_expenses', id));
-                if (data.monthId) recalcMonthTotals(data.monthId);
-                saveDb().then(() => {
-                  loadMonth(activeMonth);
-                  setAllMonths(getAllMonthsSummary());
-                  toast(`${ids.length} שורות נמחקו`, 'success');
-                });
-              }}
-            />
-
-            <ExpenseTable
               title="הוצאות משתנות"
-              icon="🛒"
+              icon="�"
               columns={FIXED_COLS}
               rows={data.variableExpenses}
               tableName="variable_expenses"
@@ -475,7 +431,7 @@ export default function App() {
 
             <ExpenseTable
               title="הוצאות - טליה"
-              icon="👤"
+              icon="�"
               columns={PERSON_COLS}
               rows={data.taliaExpenses}
               tableName="talia_expenses"
@@ -484,6 +440,49 @@ export default function App() {
               onAddRow={handleAddRow}
               onDeleteRows={(ids) => {
                 ids.forEach((id) => deleteRow('talia_expenses', id));
+                if (data.monthId) recalcMonthTotals(data.monthId);
+                saveDb().then(() => {
+                  loadMonth(activeMonth);
+                  setAllMonths(getAllMonthsSummary());
+                  toast(`${ids.length} שורות נמחקו`, 'success');
+                });
+              }}
+            />
+
+            <ExpenseTable
+              title="הוצאות קבועות"
+              icon="🏠"
+              columns={FIXED_COLS}
+              rows={data.fixedExpenses}
+              tableName="fixed_expenses"
+              monthId={data.monthId}
+              onCellSave={handleCellSave}
+              onAddRow={handleAddRow}
+              onDeleteRows={(ids) => {
+                ids.forEach((id) => deleteRow('fixed_expenses', id));
+                if (data.monthId) recalcMonthTotals(data.monthId);
+                saveDb().then(() => {
+                  loadMonth(activeMonth);
+                  setAllMonths(getAllMonthsSummary());
+                  toast(`${ids.length} שורות נמחקו`, 'success');
+                });
+              }}
+            />
+
+            <ExpenseTable
+              title="הכנסות"
+              icon="�"
+              columns={[
+                { key: 'name', label: 'מקור', type: 'text' },
+                { key: 'amount', label: 'סכום', type: 'number' },
+              ]}
+              rows={data.income}
+              tableName="income"
+              monthId={data.monthId}
+              onCellSave={handleCellSave}
+              onAddRow={handleAddRow}
+              onDeleteRows={(ids) => {
+                ids.forEach((id) => deleteRow('income', id));
                 if (data.monthId) recalcMonthTotals(data.monthId);
                 saveDb().then(() => {
                   loadMonth(activeMonth);

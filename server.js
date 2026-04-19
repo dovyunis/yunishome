@@ -77,6 +77,13 @@ const server = http.createServer((req, res) => {
 server.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Home Expenses server running on http://0.0.0.0:${PORT}`);
   console.log(`   Local:   http://localhost:${PORT}`);
+
+  // Self-ping every 14 minutes to prevent Render free tier from sleeping
+  const RENDER_URL = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`;
+  setInterval(() => {
+    require('https').get(RENDER_URL, () => {}).on('error', () => {});
+    console.log(`[KEEP-ALIVE] Pinged ${RENDER_URL}`);
+  }, 14 * 60 * 1000);
   // Get local IP
   const nets = require('os').networkInterfaces();
   for (const iface of Object.values(nets)) {
